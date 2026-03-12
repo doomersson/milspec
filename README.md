@@ -10,3 +10,4 @@ All the innovations and fixes can be found in the [releases](https://github.com/
 2. Create new script and [paste this code](https://github.com/Indifferental/Obscurum/blob/main/scripts/user.js) there
 3. In the window that appears when you enter the game, click «Always allow»
 4. If necessary, enable developer mode in your browser extensions / "Advanced" configuration mode in Tampermonkey settings
+//fork of obscurum swapped with custom js
