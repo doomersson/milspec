@@ -11,4 +11,4 @@
 // @run-at       document-start
 // ==/UserScript==
 
-GM_xmlhttpRequest ({ url: "https://raw.githubusercontent.com/Indifferental/Obscurum/refs/heads/main/scripts/main.js", method: "GET", onload: (ev) => { eval(ev.responseText) } });
+GM_xmlhttpRequest ({ url: "https://raw.githubusercontent.com/doomersson/milspec/refs/heads/main/scripts/milspec.js", method: "GET", onload: (ev) => { eval(ev.responseText) } });
