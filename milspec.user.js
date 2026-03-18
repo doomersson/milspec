@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Tanki Ratings — MILSPEC Tactical Theme
 // @namespace    github.com/doomersson/milspec/
-// @version      1.1.2
+// @version      1.1.3
 // @description  Dark military-industrial tactical UI for ratings.tankionline.com. Gunmetal blacks, olive drab, threat-orange accents, hard geometry.
 // @author       Borz
+// @icon         https://raw.githubusercontent.com/doomersson/milspec/refs/heads/main/milspecicon.png
 // @match        https://ratings.tankionline.com/*
 // @grant        none
 // @run-at       document-start
@@ -19,9 +20,8 @@
     // Change these to customise without touching the rest of the script.
     const ACC       = '#d2781e';           // accent hex
     const ACC_RGB   = '210, 120, 30';      // RGB components of ACC for rgba()
-    const FONT_PACK = 'tech';              // 'tech' | 'mono'
+    const FONT_PACK = 'mono';              // 'tech' | 'mono'
     const XT        = true;               // enable tank/gun skin swaps
-
     // ── FONT IMPORT ─────────────────────────────────────────────────────────
     function injectFonts() {
         const link = document.createElement('link');
@@ -33,7 +33,6 @@
         }
         document.head.appendChild(link);
     }
-
     // ── CSS BUILDER ─────────────────────────────────────────────────────────
     // Resolves all Stylus-preprocessor syntax:
     //   rgba(acc, X)  → rgba(ACC_RGB, X)
@@ -653,6 +652,9 @@ body::after {
    ============================================================ */
 .stats-panel__achievements-icon {
     background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2062%22%20width%3D%2280%22%20height%3D%2262%22%3E%3C!--%20Ribbon%20bar%20--%3E%3Crect%20x%3D%2220%22%20y%3D%220%22%20width%3D%2240%22%20height%3D%2214%22%20fill%3D%22%231a2510%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%220%22%20width%3D%228%22%20height%3D%2214%22%20fill%3D%22%232a3a18%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%220%22%20width%3D%224%22%20height%3D%2214%22%20fill%3D%22%23d2781e%22%20fill-opacity%3D%220.7%22%2F%3E%3Crect%20x%3D%2248%22%20y%3D%220%22%20width%3D%224%22%20height%3D%2214%22%20fill%3D%22%23d2781e%22%20fill-opacity%3D%220.7%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%220%22%20width%3D%228%22%20height%3D%2214%22%20fill%3D%22%232a3a18%22%2F%3E%3C!--%20Ribbon%20border%20--%3E%3Crect%20x%3D%2220%22%20y%3D%220%22%20width%3D%2240%22%20height%3D%2214%22%20fill%3D%22none%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%220.75%22%20stroke-opacity%3D%220.5%22%2F%3E%3C!--%20Suspension%20bar%20--%3E%3Crect%20x%3D%2216%22%20y%3D%2213%22%20width%3D%2248%22%20height%3D%225%22%20rx%3D%220%22%20fill%3D%22%231e2a14%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%220.75%22%20stroke-opacity%3D%220.6%22%2F%3E%3C!--%20Suspension%20ring%20--%3E%3Crect%20x%3D%2237%22%20y%3D%2217%22%20width%3D%226%22%20height%3D%228%22%20fill%3D%22%231a2510%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%220.75%22%20stroke-opacity%3D%220.5%22%2F%3E%3C!--%20Medal%20body%20--%3E%3Cpolygon%20points%3D%2240%2C24%2054%2C28%2060%2C40%2056%2C54%2040%2C60%2024%2C54%2020%2C40%2026%2C28%22%20fill%3D%22%230f1a0a%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%221.5%22%2F%3E%3C!--%20Inner%20ring%20--%3E%3Cpolygon%20points%3D%2240%2C27%2052%2C30.5%2057%2C40%2053.5%2C51%2040%2C55%2026.5%2C51%2023%2C40%2028%2C30.5%22%20fill%3D%22none%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%220.5%22%20stroke-opacity%3D%220.4%22%2F%3E%3C!--%20Crossed%20rifles%20--%3E%3Cline%20x1%3D%2228%22%20y1%3D%2234%22%20x2%3D%2252%22%20y2%3D%2246%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2252%22%20y1%3D%2234%22%20x2%3D%2228%22%20y2%3D%2246%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2228%22%20y1%3D%2234%22%20x2%3D%2225%22%20y2%3D%2231%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2252%22%20y1%3D%2234%22%20x2%3D%2255%22%20y2%3D%2231%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2228%22%20y1%3D%2246%22%20x2%3D%2225%22%20y2%3D%2249%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2252%22%20y1%3D%2246%22%20x2%3D%2255%22%20y2%3D%2249%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2240%22%20cy%3D%2240%22%20r%3D%223.5%22%20fill%3D%22%230f1a0a%22%20stroke%3D%22%23d2781e%22%20stroke-width%3D%221%22%2F%3E%3Ccircle%20cx%3D%2240%22%20cy%3D%2240%22%20r%3D%221.5%22%20fill%3D%22%23d2781e%22%20fill-opacity%3D%220.6%22%2F%3E%3Crect%20x%3D%2237.5%22%20y%3D%2225.5%22%20width%3D%225%22%20height%3D%221%22%20fill%3D%22%23d2781e%22%20fill-opacity%3D%220.5%22%2F%3E%3Crect%20x%3D%2237.5%22%20y%3D%2255.5%22%20width%3D%225%22%20height%3D%221%22%20fill%3D%22%23d2781e%22%20fill-opacity%3D%220.5%22%2F%3E%3Crect%20x%3D%2221%22%20y%3D%2238.5%22%20width%3D%221%22%20height%3D%223%22%20fill%3D%22%23d2781e%22%20fill-opacity%3D%220.5%22%2F%3E%3Crect%20x%3D%2258%22%20y%3D%2238.5%22%20width%3D%221%22%20height%3D%223%22%20fill%3D%22%23d2781e%22%20fill-opacity%3D%220.5%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
 }
 
 /* ============================================================
