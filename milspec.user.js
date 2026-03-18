@@ -4,7 +4,7 @@
 // @version      1.1.3
 // @description  Dark military-industrial tactical UI for ratings.tankionline.com. Gunmetal blacks, olive drab, threat-orange accents, hard geometry.
 // @author       Borz
-// @icon         https://raw.githubusercontent.com/doomersson/milspec/refs/heads/main/milspecicon.png
+// @icon         https://raw.githubusercontent.com/doomersson/milspec/refs/heads/main/milly.png
 // @match        https://ratings.tankionline.com/*
 // @grant        none
 // @run-at       document-start
