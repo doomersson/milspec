@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tanki Ratings — MILSPEC Tactical Theme
 // @namespace    github.com/doomersson/milspec/
-// @version      1.1.3
+// @version      1.1.4
 // @description  Dark military-industrial tactical UI for ratings.tankionline.com. Gunmetal blacks, olive drab, threat-orange accents, hard geometry.
 // @author       Borz
 // @icon         https://raw.githubusercontent.com/doomersson/milspec/refs/heads/main/milly.png
@@ -22,6 +22,8 @@
     const ACC_RGB   = '210, 120, 30';      // RGB components of ACC for rgba()
     const FONT_PACK = 'mono';              // 'tech' | 'mono'
     const XT        = true;               // enable tank/gun skin swaps
+    const SC        = true;               // enable scanlines
+
     // ── FONT IMPORT ─────────────────────────────────────────────────────────
     function injectFonts() {
         const link = document.createElement('link');
@@ -33,21 +35,31 @@
         }
         document.head.appendChild(link);
     }
+
     // ── CSS BUILDER ─────────────────────────────────────────────────────────
-    // Resolves all Stylus-preprocessor syntax:
-    //   rgba(acc, X)  → rgba(ACC_RGB, X)
-    //   acc           → ACC
-    //   hwb(acc …)    → hwb(…) with literal value
     function buildCSS() {
         const fontFamilyMono = '"JetBrains Mono", "Fira Code", "Courier New", monospace';
         const fontFamilyTech = '"Share Tech Mono", "Rajdhani", "Oswald", sans-serif';
         const fontFamily = FONT_PACK === 'mono' ? fontFamilyMono : fontFamilyTech;
 
+        // Build progress bar 0-100% content labels
+        let progressLabels = '';
+        for (let i = 0; i <= 100; i++) {
+            progressLabels += `.generic-box.panel.user-info-panel .progress-bar__bar[style*="${i}%"]::after { content: "${i}%"; }\n`;
+        }
+
         return `
 /* ============================================================
    RESET & ROOT — Bunker atmosphere
    ============================================================ */
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Hide caret everywhere by default */
+* {
+    caret-color: transparent;
+}
 
 body, body.fonts-ready {
     font-family: ${fontFamily};
@@ -102,7 +114,8 @@ html {
     color: ${ACC} !important;
     border-bottom-color: ${ACC} !important;
 }
-/*Font*/
+
+/* Font size override */
 .portal-navigation__link {
     font-size: 1.6em;
 }
@@ -162,9 +175,18 @@ html {
         inset 0 1px 0 rgba(210,120,30,0.08) !important;
     transition: border-color 0.15s, box-shadow 0.15s !important;
     border-radius: 0 10px 0 10px / 0 10px 0 10px;
+    corner-shape: bevel;
 }
 .generic-box:hover {
     border-color: rgba(${ACC_RGB}, 0.35) !important;
+}
+
+/* ============================================================
+   SLIDER
+   ============================================================ */
+.slider__inner {
+    border-radius: 0 10px 0 10px / 0 10px 0 10px;
+    corner-shape: bevel;
 }
 
 /* ============================================================
@@ -203,7 +225,7 @@ html {
     letter-spacing: 0.08em;
 }
 
-/* Search / generic button */
+/* Search / generic button — no clip-path (matches Stylus) */
 .generic-button,
 .search-panel__button-search {
     background: rgba(${ACC_RGB}, 0.15) !important;
@@ -213,7 +235,6 @@ html {
     letter-spacing: 0.12em !important;
     font-size: 0.8rem !important;
     border-radius: 0 !important;
-    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
     transition: background 0.15s, border-color 0.15s, box-shadow 0.15s !important;
     box-shadow: none !important;
 }
@@ -424,11 +445,13 @@ html {
 .progress-bar {
     background: rgba(6, 9, 5, 0.9) !important;
     border: 1px solid rgba(${ACC_RGB}, 0.2) !important;
+    corner-shape: square bevel square bevel;
 }
 .progress-bar__bar {
     background: linear-gradient(90deg, rgba(${ACC_RGB}, 0.8), rgba(${ACC_RGB}, 0.4)) !important;
     box-shadow: 0 0 8px rgba(${ACC_RGB}, 0.3) !important;
     border-radius: 3px;
+    corner-shape: square bevel square bevel;
 }
 .progress-bar__values {
     top: 0.5em;
@@ -437,6 +460,24 @@ html {
     font-size: 0.72rem !important;
     letter-spacing: 0.05em !important;
 }
+
+/* Progress bar percentage label via ::after */
+.generic-box.panel.user-info-panel .progress-bar__bar {
+    position: relative;
+}
+.generic-box.panel.user-info-panel .progress-bar__bar::after {
+    position: absolute;
+    color: ${ACC} !important;
+    top: 4px !important;
+    left: 600px !important;
+    font-variant-numeric: tabular-nums !important;
+    letter-spacing: 0.05em !important;
+    font-size: 0.88rem !important;
+    text-align: center;
+    line-height: 1.35;
+    text-shadow: 1px 1px 3px #000, -1px -1px 3px #000;
+}
+${progressLabels}
 
 /* Gearscore */
 .gearscore__title {
@@ -586,7 +627,7 @@ html {
 /* ============================================================
    SCANLINE TEXTURE — CRT operations room overlay
    ============================================================ */
-body::after {
+${SC ? `body::after {
     content: "";
     position: fixed;
     inset: 0;
@@ -599,7 +640,7 @@ body::after {
         rgba(0, 0, 0, 0.06) 2px,
         rgba(0, 0, 0, 0.06) 4px
     );
-}
+}` : ''}
 
 /* ============================================================
    ICON TICK — Completed indicator
@@ -621,12 +662,14 @@ body::after {
     border-color: rgba(${ACC_RGB}, 0.25) !important;
     color: #c8cfc0 !important;
     border-radius: 0 8px 0 8px / 0 8px 0 8px;
+    corner-shape: bevel;
     box-shadow: none !important;
 }
 .form-element:focus,
 .form-element:active {
     border-color: rgba(${ACC_RGB}, 0.7) !important;
     box-shadow: 0 0 6px rgba(${ACC_RGB}, 0.2) !important;
+    caret-color: ${ACC} !important;
 }
 
 /* ============================================================
@@ -804,6 +847,7 @@ img.profile-entity-image__img[src*="jgr"] {
     }
 
     // ── SKIN SWAPS (XT) ─────────────────────────────────────────────────────
+    // All URLs updated to match Stylus version
     function buildSkinSwapCSS() {
         return `
 /* ============================================================
@@ -883,17 +927,17 @@ img.profile-entity-image__img[src*="/602/61754/171/47/30114373154622/"] {
 img.profile-entity-image__img[src*="/606/26070/125/145/30305416163507/"] {
     background: url("https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.webp") center/contain no-repeat;
 }
-/* shaft */
+/* shaft — updated URL */
 img.profile-entity-image__img[src*="/622/43505/151/101/31110721265007/"] {
-    background: url("https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.webp") center/contain no-repeat;
+    background: url("https://s.eu.tankionline.com/622/115027/356/340/31123205770464/image.webp") center/contain no-repeat;
 }
 /* gauss */
 img.profile-entity-image__img[src*="/611/61722/256/267/30454367266373/"] {
     background: url("https://s.eu.tankionline.com/560/166470/223/123/27035516206046/image.webp") center/contain no-repeat;
 }
-/* magnum */
+/* magnum — updated URL */
 img.profile-entity-image__img[src*="/632/23036/322/273/31504607631061/"] {
-    background: url("https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.webp") center/contain no-repeat;
+    background: url("https://s.eu.tankionline.com/632/76146/224/361/31517431551253/image.webp") center/contain no-repeat;
 }
 /* thunder */
 img.profile-entity-image__img[src*="/601/112676/250/233/30062557707304/"] {
@@ -915,9 +959,9 @@ img.profile-entity-image__img[src*="/566/114246/64/16/27323052543056/"] {
 img.profile-entity-image__img[src*="/601/17263/233/51/30043654742567/"] {
     background: url("https://s.eu.tankionline.com/602/142236/225/135/30131263063453/image.webp") center/contain no-repeat;
 }
-/* twins */
+/* twins — updated URL */
 img.profile-entity-image__img[src*="/575/72153/171/306/27656433310704/"] {
-    background: url("https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.webp") center/contain no-repeat;
+    background: url("https://s.eu.tankionline.com/607/24074/235/2/30345017117777/image.webp") center/contain no-repeat;
 }
 /* hammer */
 img.profile-entity-image__img[src*="/611/147301/37/346/30471660553063/"] {
@@ -931,9 +975,9 @@ img.profile-entity-image__img[src*="/571/164753/344/273/31254566614710/"] {
 img.profile-entity-image__img[src*="/605/12650/335/51/30242554322574/"] {
     background: url("https://s.eu.tankionline.com/631/164030/223/154/31475006414111/image.webp") center/contain no-repeat;
 }
-/* ricochet */
+/* ricochet — updated URL */
 img.profile-entity-image__img[src*="/603/146215/116/130/30171443247472/"] {
-    background: url("https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.webp") center/contain no-repeat;
+    background: url("https://s.eu.tankionline.com/577/177107/117/226/27777622231563/image.webp") center/contain no-repeat;
 }
 /* firebird */
 img.profile-entity-image__img[src*="/0/114/134/163/27571212744112/"] {
@@ -943,9 +987,9 @@ img.profile-entity-image__img[src*="/0/114/134/163/27571212744112/"] {
 img.profile-entity-image__img[src*="/575/156205/46/235/27673441764603/"] {
     background: url("https://s.eu.tankionline.com/607/136170/201/132/30367436101741/image.webp") center/contain no-repeat;
 }
-/* vulcan */
+/* vulcan — updated URL */
 img.profile-entity-image__img[src*="/622/115017/367/224/31123203774154/"] {
-    background: url("https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.webp") center/contain no-repeat;
+    background: url("https://s.eu.tankionline.com/613/14030/7/251/30543006303434/image.webp") center/contain no-repeat;
 }
 
 /* Special items */
@@ -985,7 +1029,6 @@ img.profile-entity-image__img:is(
         if (XT) injectStyle(buildSkinSwapCSS());
     }
 
-    // Run as early as possible; fall back to DOMContentLoaded if head not ready
     if (document.head) {
         init();
     } else {
